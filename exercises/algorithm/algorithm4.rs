@@ -51,13 +51,24 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match self.root {
+            None => {
+                self.root = Some(Box::new(TreeNode::new(value)));
+            }
+            Some(ref mut node) => {
+                node.insert(value);
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
-    }
+        match &self.root {
+            None => false,
+            Some(node) => node.search(value),
+        }
+     }
 }
 
 impl<T> TreeNode<T>
@@ -67,6 +78,48 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                match self.left {
+                    None => {
+                        self.left = Some(Box::new(TreeNode::new(value)));
+                    }
+                    Some(ref mut left_node) => {
+                        left_node.insert(value);
+                    }
+                }
+            }
+            Ordering::Greater => {
+                match self.right {
+                    None => {
+                        self.right = Some(Box::new(TreeNode::new(value)));
+                    }
+                    Some(ref mut right_node) => {
+                        right_node.insert(value);
+                    }
+                }
+            }
+            Ordering::Equal => {
+                // Duplicate value - do nothing (BST doesn't store duplicates)
+            }
+        }
+    }
+    fn search(&self, value: T) -> bool {
+        match value.cmp(&self.value) {
+            Ordering::Equal => true,
+            Ordering::Less => {
+                match &self.left {
+                    None => false,
+                    Some(left_node) => left_node.search(value),
+                }
+            }
+            Ordering::Greater => {
+                match &self.right {
+                    None => false,
+                    Some(right_node) => right_node.search(value),
+                }
+            }
+        }
     }
 }
 
