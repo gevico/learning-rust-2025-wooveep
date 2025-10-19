@@ -44,6 +44,38 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        // 1. If the length of the provided string is 0, return default
+        if s.is_empty() {
+            return Person::default();
+        }
+
+        // 2. Split the given string on commas
+        let parts: Vec<&str> = s.split(',').collect();
+
+        // Check if we have exactly 2 parts (name and age)
+        if parts.len() != 2 {
+            return Person::default();
+        }
+
+        // 3. Extract the first element as the name
+        let name = parts[0];
+
+        // 4. If the name is empty, return default
+        if name.is_empty() {
+            return Person::default();
+        }
+
+        // 5. Extract and parse the age
+        let age_str = parts[1];
+
+        // Parse age, return default if parsing fails
+        match age_str.parse::<usize>() {
+            Ok(age) => Person {
+                name: name.to_string(),
+                age,
+            },
+            Err(_) => Person::default(),
+        }
     }
 }
 
